@@ -1,0 +1,13 @@
+<template>
+  <div class="checkbox" if.bind="visibility !== 'hidden'">
+    <label>
+      <input id.bind="name" type="checkbox"
+      checked.bind="internalValue" tabindex.bind="tabIndex" 
+      readonly.bind="visibility === 'readOnly'"
+      disabled.bind="visibility === 'disabled'"
+      change.delegate="onChanged()" /> ${label}
+    </label>
+    
+    <span class="text-danger" if.bind="errors.length">${errors[0]}</span>
+  </div>
+</template>

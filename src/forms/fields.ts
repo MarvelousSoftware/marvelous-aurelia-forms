@@ -170,7 +170,6 @@ export class NumberInput extends Field {
     switch(this.type) {
       case 'integer': {
         return isInteger;
-        break;
       }
       case 'decimal': {
         if(isInteger) {
@@ -186,7 +185,6 @@ export class NumberInput extends Field {
         }
         
         return false;
-        break;
       }
     }
     return true;
