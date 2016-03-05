@@ -7,7 +7,7 @@ and validators. It is also great to dynamically create a form while application 
     
 Project documentation: [http://marvelous.software/docs.html#/forms](http://marvelous.software/docs.html#/forms)
 
-Please bear in mind that this library is still in the beta and some features (like translations support) might be missing.
+NOTE: Please bear in mind that this library is still in the beta and some features (like translations support) might be missing.
 
 ## Installation
 Install the forms library using jspm:
