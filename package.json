@@ -7,7 +7,7 @@
   "main": "dist/common/forms.js",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/MarvelousSoftware/marvelous-aurelia-forms"
   },
   "devDependencies": {
     "aurelia-tools": "^0.1.3",
