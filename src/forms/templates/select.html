@@ -1,5 +1,5 @@
 <template>
-  <div class="form-group m-form-group ${errors.length ? 'has-error' : ''} ${focused ? 'has-focus' : ''}" 
+  <div class="form-group m-form-group ${errors.length ? 'has-error' : ''} ${focused ? 'has-focus' : ''}} ${touched ? 'm-touched' : ''}"
   if.bind="visibility !== 'hidden'">
   
     <label for.bind="name">${label}</label>

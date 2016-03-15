@@ -41,6 +41,7 @@ export class Field {
 	 */
   errors: string[] = [];
 
+  touched: boolean = false;
   focused: boolean = false;
 
   onFocus: (fied: Field) => void;
@@ -171,6 +172,7 @@ export class Field {
 	 */
   onBlured() {
     this.focused = false;
+    this.touched = true;
     this.onBlur(this);
   }
 	
