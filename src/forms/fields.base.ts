@@ -164,7 +164,6 @@ export class Field {
 	 */
   onFocused() {
     this.focused = true;
-    this.touched = true;
     this.onFocus(this);
   }
 	
@@ -173,6 +172,7 @@ export class Field {
 	 */
   onBlured() {
     this.focused = false;
+    this.touched = true;
     this.onBlur(this);
   }
 	
