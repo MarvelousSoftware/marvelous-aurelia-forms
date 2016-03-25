@@ -3,6 +3,7 @@ import {Utils as _} from 'marvelous-aurelia-core/utils';
 import {PubSub} from 'marvelous-aurelia-core/pubsub';
 import {Field, fieldVisibility} from './fields.base';
 import {IFieldValidationResult, IValidationResultsPusher, OnSignalValidationResultsPusher} from './validation';
+import {globalConfig, FormsConfig, createConfiguration} from './config';
 
 export let events = {
   fieldAdded: 'fieldAdded',
@@ -34,7 +35,12 @@ export class Schema {
 	 * Indicates wheter whole schema is in the read only state.
 	 */
   public isReadOnly: boolean = false;
-
+  
+  /**
+   * True if schema has been submitted at least once.
+   */
+  public submitted = false;
+  
   public pubSub = new PubSub();
 
   private _uniqueNameCount = 0;
@@ -47,6 +53,22 @@ export class Schema {
       });
     });
     return fields;
+  }
+
+  private _config: FormsConfig = globalConfig;
+  
+  /**
+   * Gets configuration used by the form. By default it is taken from marvelous-aurelia-forms plugin configuration.
+   */  
+  public get config() {
+    return this._config;
+  }
+  
+  /**
+   * Sets configuration used by the form. By default it is taken from marvelous-aurelia-forms plugin configuration.
+   */  
+  public set config(config: FormsConfig) {
+    this._config = createConfiguration(config, globalConfig);
   }
 
   constructor(schema: Row[] | Field[] | IDictionary<any> = undefined, rowsOrColumns: Row[] | string[] | number = undefined) {

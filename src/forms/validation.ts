@@ -1,6 +1,5 @@
 import {Debouncer, Utils as _} from 'marvelous-aurelia-core/utils';
 import {Field} from './fields.base';
-import {formsConfig} from './config';
 
 export class ValidationExecutor {
   /**

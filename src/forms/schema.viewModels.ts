@@ -89,8 +89,11 @@ export class FormViewModel {
     if (this.beforeSubmit && this.beforeSubmit instanceof Function) {
       this.beforeSubmit();
     }
-
+    
+    this.schema.submitted = true;
+    
     if (this.submit && this.submit instanceof Function) {
+      // TODO: schema validation should return this context directly
       this.schema.validate().then(x => {
         this.submit({
           $context: this._createSubmitContext(x)
@@ -183,7 +186,7 @@ export class RowViewModel {
     // NOTE about m-target-id: field name is good enough as an unique identifier since
     // there cannot be more than one field with same name in the very same row.
     
-    field.applyDefaultValuesForProperties();
+    field.bindModelBased();
     
     wrapper.innerHTML = `
     <div m-target-id="${field.name}" class="col-sm-${(12 / field.row.columns)*field.span}">

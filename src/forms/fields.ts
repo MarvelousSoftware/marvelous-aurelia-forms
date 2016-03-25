@@ -1,6 +1,5 @@
 import {Utils as _} from 'marvelous-aurelia-core/utils';
 import {AureliaUtils as au} from 'marvelous-aurelia-core/aureliaUtils';
-import {formsConfig} from './config';
 import {customField, Field, IFieldDefinition, fieldCreator} from './fields.base';
 
 // TODO: create following controls 
@@ -18,7 +17,7 @@ export class TextInput extends Field {
 	  
   constructor(field: ITextInputDefinition) {
     super(field);
-    this.defaultFor(() => this.templateUrl, () => formsConfig.fields.textInput.templateUrl);
+    this.defaultFor(() => this.templateUrl, () => this.config.fields.textInput.templateUrl);
     this.defaultFor(() => this.type, () => 'text');
   }
   
@@ -54,7 +53,7 @@ export class CheckboxInput extends Field {
   
 	constructor(field: ICheckboxInputDefinition) {
     super(field);
-    this.defaultFor(() => this.templateUrl, () => formsConfig.fields.checkboxInput.templateUrl);  
+    this.defaultFor(() => this.templateUrl, () => this.config.fields.checkboxInput.templateUrl);  
 	}
   
   bind() {
@@ -88,7 +87,7 @@ export class NumberInput extends Field {
   
   constructor(field: INumberInputDefinition) {
     super(field);
-    this.defaultFor(() => this.templateUrl, () => formsConfig.fields.numberInput.templateUrl);
+    this.defaultFor(() => this.templateUrl, () => this.config.fields.numberInput.templateUrl);
     this.defaultFor(() => this.type, () => 'integer');
     this.defaultFor(() => this.decimalSeparator, () => '.');
     this.defaultFor(() => this.autoChangeToSeparator, () => [',']);
@@ -147,7 +146,7 @@ export class NumberInput extends Field {
       return true;
     }
     
-    let key = formsConfig.keyCodeMap[e.which];
+    let key = this.config.keyCodeMap[e.which];
 
     switch(key) {
       case 'home':
@@ -225,8 +224,8 @@ export class TextArea extends Field {
 		
   constructor(field: ITextAreaDefinition) {
     super(field);
-    this.defaultFor(() => this.templateUrl, () => formsConfig.fields.textArea.templateUrl);
-    this.defaultFor(() => this.rows, () => formsConfig.fields.textArea.rows)
+    this.defaultFor(() => this.templateUrl, () => this.config.fields.textArea.templateUrl);
+    this.defaultFor(() => this.rows, () => this.config.fields.textArea.rows);
   }
 }
 export interface ITextAreaDefinition extends IFieldDefinition {
@@ -246,7 +245,7 @@ export class Select extends Field {
   constructor(field: ISelectDefinition) {
     super(field);
     
-    this.defaultFor(() => this.templateUrl, () => formsConfig.fields.select.templateUrl);
+    this.defaultFor(() => this.templateUrl, () => this.config.fields.select.templateUrl);
     this.defaultFor(() => this.getText, () => this.defaultGetTextImpl);
     this.defaultFor(() => this.getValue, () => this.defaultGetValueImpl);
     this.defaultFor(() => this.defaultText, () => '--- select ---');

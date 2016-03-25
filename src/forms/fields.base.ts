@@ -6,7 +6,7 @@ import {Utils as _} from 'marvelous-aurelia-core/utils';
 import {Compiler} from 'marvelous-aurelia-core/compiler';
 import {IValidatorDictionary, ValidationExecutor, IValidationResultsPusher, IValidationResult} from './validation';
 import {Row} from './schema';
-import {formsConfig} from './config';
+import {FormsConfig, createConfiguration, globalConfig} from './config';
 
 export const fieldMetadataKey = '__fieldMetadata__';
 
@@ -29,6 +29,7 @@ export class Field {
   tabIndex: number;
   templateUrl: string;
   validators: IValidatorDictionary;
+  config: FormsConfig;
 	
   /**
    * Value bound to the view. Parsed value is always available in the
@@ -60,7 +61,8 @@ export class Field {
   private _defaultValuesForProperties: any = {};
   private _validationExecutor: ValidationExecutor;
   private _changeListeners: ((field: Field) => void)[] = [];
-
+  private _composed = false;
+  
   get isEmpty() {
     return this.value === null || this.value === undefined || this.value === '';
   }
@@ -70,7 +72,7 @@ export class Field {
     this.defaultFor<Field>(() => this.span, () => 1);
     this.defaultFor<Field>(() => this.parse, () => this.defaultParse);
     this.defaultFor<Field>(() => this.validators, () => { return {}; });
-    this.defaultFor<Field>(() => this.tabIndex, () => formsConfig.tabIndex);
+    this.defaultFor<Field>(() => this.tabIndex, () => this.config.tabIndex);
     this.defaultFor<Field>(() => this.onFocus, () => _.noop);
     this.defaultFor<Field>(() => this.onBlur, () => _.noop);
     this.defaultFor<Field>(() => this.onChange, () => _.noop);
@@ -78,24 +80,58 @@ export class Field {
     this._validationExecutor = new ValidationExecutor(this);
   }
 
-  private _composed = false;
-  activate() {
+  bind() {
     this.internalValue = this.createInternalValue();
-
-    if (this.createdBy == fieldCreator.standard) {
-      // compiles the template using provided templateUrl
-      // but only in case of HTML based usage
-      // Model based is rendered in the m-row custom element
-      
-      let au = (<any>this.element).au;
-      let view = <View>au.controller.view;
-      if (view) {
-        view.removeNodes();
-      }
-
-      let compiler = <Compiler>Container.instance.get(Compiler);
-      return compiler.compileTemplate(this.element, this.templateUrl, this);
+    
+    if (this.createdBy == fieldCreator.dynamicForm) {
+      return;
     }
+    
+    this._initConfig();
+    this.applyDefaultValuesForProperties();
+    this.compile();
+  }
+  
+  /**
+   * Automatically called to bind model based field.
+   */
+  bindModelBased() {
+    this._initConfig();
+    this.applyDefaultValuesForProperties();
+  }
+  
+  /**
+   * Compiles the template using provided templateUrl
+   * but only in case of HTML based usage.
+   * Model based is rendered by the m-row custom element.
+   */
+  compile() {
+    let au = (<any>this.element).au;
+    let view = <View>au.controller.view;
+    if (view) {
+      view.removeNodes();
+    }
+
+    let compiler = <Compiler>Container.instance.get(Compiler);
+    return compiler.compileTemplate(this.element, this.templateUrl, this);
+  }
+  
+  private _initConfig() {
+    let getBaseConfig = () => {
+      if(this.row && this.row.schema) {
+        return this.row.schema.config;
+      }
+      return globalConfig;
+    }
+    
+    if(this.config) {
+      // config has been provided explicitly, but by convention this is not a properly created configuration instance
+      // it's just a pure javascript object
+      this.config = createConfiguration(this.config, getBaseConfig());
+      return;
+    }
+    
+    this.config = getBaseConfig();
   }
   
   /**
@@ -146,11 +182,6 @@ export class Field {
     return value;
   }
 
-  bind() {
-    this.applyDefaultValuesForProperties();
-    this.activate();
-  }
-
   valueChanged() {
     if (this._prevValue === this.value) {
       // internal change, already handled in onChanged method
@@ -173,6 +204,11 @@ export class Field {
   onBlured() {
     this.focused = false;
     this.touched = true;
+    
+    if(this.config.validation.shouldValidateOnBlur) {
+      this.validate();
+    }
+    
     this.onBlur(this);
   }
 	
@@ -320,6 +356,7 @@ export let fieldVisibility = {
   enabled: 'enabled',
 }
 
+// TODO: rename to fieldCreationApproach(HtmlBased,ModelBased)?
 export let fieldCreator = {
   dynamicForm: 'dynamic-form',
   standard: 'standard'
@@ -408,6 +445,7 @@ export function customField(name: string) {
     bindableProp('templateUrl');
     bindableProp('validators');
     bindableProp('field');
+    bindableProp('config');
 
     return newConstructor;
   }

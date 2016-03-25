@@ -1,8 +1,8 @@
 import {registerDefaultValidators} from './forms/validation.default';
-import {formsConfig} from './forms/config';
+import {globalConfig, createConfiguration} from './forms/config';
 
 // default exports
-export {formsConfig} from './forms/config';
+export {FormsConfig} from './forms/config';
 export * from './forms/fields';
 export * from './forms/fields.base';
 export * from './forms/schema';
@@ -12,10 +12,10 @@ export function configure(aurelia, configFunc) {
   registerDefaultValidators();
   
   if(typeof configFunc === "function") {
-    configFunc(formsConfig);    
+    configFunc(globalConfig);
   }
   
-  if(formsConfig.globalizeResources) {
+  if(globalConfig.globalizeResources) {
     aurelia.globalResources('./forms/fields');
     aurelia.globalResources('./forms/schema.viewModels');
   }
