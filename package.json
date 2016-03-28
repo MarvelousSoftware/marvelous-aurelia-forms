@@ -79,7 +79,7 @@
   },
   "marvelous": {
     "projects": {
-      "core": "../marvelous-aurelia-core/"
+      "marvelous-aurelia-core": "../marvelous-aurelia-core/"
     }
   }
 }

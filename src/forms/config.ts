@@ -36,6 +36,9 @@ export interface FormsConfig {
   };
   
   validation?: {
+    /**
+     * Called on field blur. If returns true then validation will be triggered automatically.
+     */
     shouldValidateOnBlur?: (field: Field) => boolean
   };
   

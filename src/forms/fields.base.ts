@@ -205,7 +205,7 @@ export class Field {
     this.focused = false;
     this.touched = true;
     
-    if(this.config.validation.shouldValidateOnBlur) {
+    if(this.config.validation.shouldValidateOnBlur(this)) {
       this.validate();
     }
     
